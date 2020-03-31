@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: "nginx:1.11.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: {{.Values.containerport}}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: wwwdata-volume
+      volumes:
+        - name: wwwdata-volume
+          configMap:
+            name: nginx-config
